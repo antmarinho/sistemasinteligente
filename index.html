@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <!-- Metadados básicos e fontes usadas no visual da aplicação. -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Busca em Grid — Agente Coletor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Todo o conteúdo visível fica dentro deste contêiner principal. -->
+  <main class="app-shell">
+    <!-- Cabeçalho com título e descrição do projeto. -->
+    <header class="hero">
+      <div>
+        <p class="eyebrow"></p>
+        <h1>Agente <span>Coletor</span></h1>
+        <p class="subtitle">Compare Largura, Profundidade, Custo Uniforme, Gulosa e A* em um mundo gerado aleatoriamente.</p>
+      </div>
+      <div class="hero-badge"><span class="pulse"></span> ambiente observável</div>
+    </header>
+
+    <!-- Controles: algoritmo, velocidade da animação e ações principais. -->
+    <section class="control-panel panel">
+      <div class="control-group algorithm-group">
+        <label for="algorithm">Escolha o tipo de busca</label>
+        <select id="algorithm">
+          <option value="bfs">Busca em Largura (BFS)</option>
+          <option value="dfs">Busca em Profundidade (DFS)</option>
+          <option value="ucs">Custo Uniforme (UCS)</option>
+          <option value="greedy">Busca Gulosa</option>
+          <option value="astar" selected>A* (Manhattan)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="speed">Velocidade da simulação</label>
+        <div class="range-row"><input id="speed" type="range" min="1" max="5" value="3"><span id="speedValue">normal</span></div>
+      </div>
+      <div class="actions">
+        <button class="button primary" id="runButton">▶ Executar busca</button>
+        <button class="button secondary" id="newMapButton">↻ Novo mapa</button>
+      </div>
+    </section>
+
+    <!-- Cartões com as métricas resumidas da busca. -->
+    <section class="stats-grid">
+      <div class="stat-card"><span class="stat-label">Algoritmo</span><strong id="statAlgorithm">A* (Manhattan)</strong></div>
+      <div class="stat-card"><span class="stat-label">Estado da busca</span><strong id="status">pronto para iniciar</strong></div>
+      <div class="stat-card"><span class="stat-label">Visitados</span><strong id="visitedCount">0</strong></div>
+      <div class="stat-card"><span class="stat-label">Custo do caminho</span><strong id="pathCost">—</strong></div>
+      <div class="stat-card"><span class="stat-label">Comidas coletadas</span><strong id="foodCount">0</strong></div>
+    </section>
+
+    <!-- Área principal: tabuleiro à esquerda e leitura do frame à direita. -->
+    <section class="workspace">
+      <div class="board-panel panel">
+        <div class="board-header"><div><span class="section-kicker">MAPA DINÂMICO</span><h2>Ambiente de coleta</h2></div><span class="coordinates" id="coordinates">gerando...</span></div>
+        <!-- app.js cria as células do mapa dinamicamente dentro deste elemento. -->
+        <div id="grid" class="grid" aria-label="Grid do ambiente"></div>
+        <div class="legend">
+          <span><i class="legend-swatch terrain grass"></i> livre</span><span><i class="legend-swatch terrain sand"></i> areia · 10</span><span><i class="legend-swatch terrain mud"></i> atoleiro · 50</span><span><i class="legend-swatch terrain water"></i> água · 100</span><span><i class="legend-swatch terrain obstacle"></i> obstáculo</span>
+          <span class="legend-divider"></span><span><i class="legend-swatch marker start"></i> agente</span><span><i class="legend-swatch marker goal"></i> comida</span>
+        </div>
+      </div>
+
+      <!-- Painéis de explicação e métricas detalhadas. -->
+      <aside class="side-column">
+        <div class="panel explanation"><span class="section-kicker">LEITURA DO FRAME</span><h2 id="phaseTitle">Aguardando execução</h2><p id="phaseText">Escolha uma estratégia e execute a busca. A animação destaca a fronteira e os estados visitados a cada expansão.</p><div class="phase-key"><div><span class="key-dot frontier-dot"></span> fronteira</div><div><span class="key-dot visited-dot"></span> visitado</div><div><span class="key-dot path-dot"></span> caminho final</div></div></div>
+        <div class="panel metrics"><span class="section-kicker">MÉTRICAS</span><div class="metric-row"><span>Expansões</span><strong id="expansions">0</strong></div><div class="metric-row"><span>Passos do caminho</span><strong id="pathLength">—</strong></div><div class="metric-row"><span>Energia restante</span><strong id="energy">—</strong></div><div class="metric-row"><span>Terreno atual</span><strong id="currentTerrain">—</strong></div><div class="metric-row"><span>Velocidade</span><strong id="agentSpeed">—</strong></div></div>
+      </aside>
+    </section>
+
+    <footer><span>Busca informada usa heurística de Manhattan: h(n) = |x − x<sub>objetivo</sub>| + |y − y<sub>objetivo</sub>|.</span><span class="mono">GRID 18 × 26</span></footer>
+  </main>
+  <!-- O JavaScript controla a geração do mapa, as buscas e as animações. -->
+  <script src="app.js"></script>
+</body>
+</html>
