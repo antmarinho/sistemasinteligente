@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20261002" />
 </head>
 <body>
   <!-- Todo o conteúdo visível fica dentro deste contêiner principal. -->
@@ -16,34 +16,12 @@
     <!-- Cabeçalho com título e descrição do projeto. -->
     <header class="hero">
       <div>
-        <p class="eyebrow"></p>
+        <p class="eyebrow">INTELIGÊNCIA ARTIFICIAL · BUSCA EM ESPAÇOS DE ESTADOS</p>
         <h1>Agente <span>Coletor</span></h1>
         <p class="subtitle">Compare Largura, Profundidade, Custo Uniforme, Gulosa e A* em um mundo gerado aleatoriamente.</p>
       </div>
       <div class="hero-badge"><span class="pulse"></span> ambiente observável</div>
     </header>
-
-    <!-- Controles: algoritmo, velocidade da animação e ações principais. -->
-    <section class="control-panel panel">
-      <div class="control-group algorithm-group">
-        <label for="algorithm">Escolha o tipo de busca</label>
-        <select id="algorithm">
-          <option value="bfs">Busca em Largura (BFS)</option>
-          <option value="dfs">Busca em Profundidade (DFS)</option>
-          <option value="ucs">Custo Uniforme (UCS)</option>
-          <option value="greedy">Busca Gulosa</option>
-          <option value="astar" selected>A* (Manhattan)</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label for="speed">Velocidade da simulação</label>
-        <div class="range-row"><input id="speed" type="range" min="1" max="5" value="3"><span id="speedValue">normal</span></div>
-      </div>
-      <div class="actions">
-        <button class="button primary" id="runButton">▶ Executar busca</button>
-        <button class="button secondary" id="newMapButton">↻ Novo mapa</button>
-      </div>
-    </section>
 
     <!-- Cartões com as métricas resumidas da busca. -->
     <section class="stats-grid">
@@ -68,6 +46,27 @@
 
       <!-- Painéis de explicação e métricas detalhadas. -->
       <aside class="side-column">
+        <!-- Menus de controle ficam ao lado do mapa para manter tudo no mesmo quadro. -->
+        <section class="control-panel panel">
+          <div class="control-group algorithm-group">
+            <label for="algorithm">Escolha o tipo de busca</label>
+            <select id="algorithm">
+              <option value="bfs">Busca em Largura (BFS)</option>
+              <option value="dfs">Busca em Profundidade (DFS)</option>
+              <option value="ucs">Custo Uniforme (UCS)</option>
+              <option value="greedy">Busca Gulosa</option>
+              <option value="astar" selected>A* (Manhattan)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="speed">Velocidade da simulação</label>
+            <div class="range-row"><input id="speed" type="range" min="1" max="5" value="3"><span id="speedValue">normal</span></div>
+          </div>
+          <div class="actions">
+            <button class="button primary" id="runButton">▶ Executar busca</button>
+            <button class="button secondary" id="newMapButton">↻ Novo mapa</button>
+          </div>
+        </section>
         <div class="panel explanation"><span class="section-kicker">LEITURA DO FRAME</span><h2 id="phaseTitle">Aguardando execução</h2><p id="phaseText">Escolha uma estratégia e execute a busca. A animação destaca a fronteira e os estados visitados a cada expansão.</p><div class="phase-key"><div><span class="key-dot frontier-dot"></span> fronteira</div><div><span class="key-dot visited-dot"></span> visitado</div><div><span class="key-dot path-dot"></span> caminho final</div></div></div>
         <div class="panel metrics"><span class="section-kicker">MÉTRICAS</span><div class="metric-row"><span>Expansões</span><strong id="expansions">0</strong></div><div class="metric-row"><span>Passos do caminho</span><strong id="pathLength">—</strong></div><div class="metric-row"><span>Energia restante</span><strong id="energy">—</strong></div><div class="metric-row"><span>Terreno atual</span><strong id="currentTerrain">—</strong></div><div class="metric-row"><span>Velocidade</span><strong id="agentSpeed">—</strong></div></div>
       </aside>
@@ -76,6 +75,7 @@
     <footer><span>Busca informada usa heurística de Manhattan: h(n) = |x − x<sub>objetivo</sub>| + |y − y<sub>objetivo</sub>|.</span><span class="mono">GRID 18 × 26</span></footer>
   </main>
   <!-- O JavaScript controla a geração do mapa, as buscas e as animações. -->
-  <script src="app.js"></script>
+  <!-- O parâmetro de versão evita que o navegador reutilize um app.js antigo em cache. -->
+  <script src="app.js?v=20261001"></script>
 </body>
 </html>

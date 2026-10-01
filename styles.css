@@ -32,8 +32,11 @@ select, input[type=range] { width:100%; } select { border:1px solid var(--line);
 .grid { display:grid; grid-template-columns:repeat(26, 1fr); gap:4px; width:100%; aspect-ratio:26/18; min-height:540px; background:#e8eee9; padding:6px; border-radius:14px; overflow:hidden; }
 /* Cores originais dos terrenos. */
 .cell { position:relative; min-width:0; min-height:0; border-radius:3px; background:#e7eee6; transition:background .16s, box-shadow .16s, transform .16s; } .cell.grass { background:#e7eee6; } .cell.sand { background:#eadca8; } .cell.mud { background:#a88670; } .cell.water { background:#7fb8c5; } .cell.obstacle { background:#33494b; }
-/* Estados intermediários: fronteira e células já visitadas. */
-.cell.frontier { box-shadow:inset 0 0 0 2px #f2ae43; } .cell.visited { background:#97c7b3; box-shadow:inset 0 0 0 2px #4e9b88; } .cell.visited.obstacle { background:#526b67; } .cell.frontier.visited { background:#78b5a3; box-shadow:inset 0 0 0 2px #f2ae43; }
+/* Estados intermediários: fronteira laranja forte e azul translúcido. */
+.cell.frontier { box-shadow:inset 0 0 0 2px #a83b00, 0 0 0 1px #d85c00; }
+.cell.visited { box-shadow:inset 0 0 0 1px rgba(35, 126, 178, .72); }
+.cell.visited::before { content:''; position:absolute; inset:0; border-radius:inherit; background:rgba(49, 169, 224, .35); pointer-events:none; z-index:1; }
+.cell.frontier.visited { box-shadow:inset 0 0 0 2px #a83b00, 0 0 0 1px #d85c00; }
 /* O caminho usa borda laranja, sem trocar a cor central do terreno. */
 .cell.path { box-shadow:inset 0 0 0 2px #f08445, 0 0 0 1px #d96026; z-index:2; } .cell.agent, .cell.goal { z-index:3; } .cell.agent { box-shadow:inset 0 0 0 2px #fff, 0 0 0 3px #244c5b; }
 .cell.path.grass { background:#e7eee6 !important; }
@@ -45,6 +48,11 @@ select, input[type=range] { width:100%; } select { border:1px solid var(--line);
 .legend { display:flex; align-items:center; flex-wrap:wrap; gap:11px 15px; margin-top:15px; color:#5d7168; font-size:11px; } .legend-swatch { display:inline-block; width:11px; height:11px; vertical-align:-2px; margin-right:5px; border-radius:3px; } .terrain.grass{background:#e7eee6}.terrain.sand{background:#eadca8}.terrain.mud{background:#a88670}.terrain.water{background:#7fb8c5}.terrain.obstacle{background:#33494b}.marker.start{background:#244c5b;border-radius:50%}.marker.goal{background:#ef6d43;border-radius:50%}.legend-divider{height:16px;width:1px;background:var(--line)}
 /* Painéis laterais de leitura do frame e métricas. */
 .side-column { display:flex; flex-direction:column; gap:16px; } .explanation, .metrics { padding:20px; } .explanation p { color:var(--muted); font-size:13px; line-height:1.55; margin:12px 0 20px; } .phase-key { border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:10px; color:#536961; font:11px 'DM Mono'; } .key-dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:7px; } .frontier-dot{background:#f2ae43}.visited-dot{background:#4e9b88}.path-dot{background:#f08445}
+/* Menus compactos na lateral do mapa. */
+.side-column .control-panel { display:block; padding:16px; }
+.side-column .control-group { min-width:0; margin-bottom:14px; }
+.side-column .actions { display:grid; grid-template-columns:1fr; gap:8px; }
+.side-column .button { width:100%; }
 /* Ajustes para tablets e celulares. */
 .metrics { flex:1; } .metric-row { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #edf1ee; padding:14px 0; color:var(--muted); font-size:12px; } .metric-row:last-child{border-bottom:0}.metric-row strong{color:var(--ink);font:500 12px 'DM Mono';}
 footer { display:flex; justify-content:space-between; gap:18px; margin-top:17px; color:#82928a; font:10px 'DM Mono'; } .mono{white-space:nowrap}
