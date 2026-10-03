@@ -2,7 +2,7 @@
 
 Simulação interativa de estratégias de busca em Inteligência Artificial. O agente precisa encontrar e coletar uma comida em um ambiente discretizado, aleatório e completamente observável, considerando obstáculos, diferentes tipos de terreno, custos de energia e velocidades de deslocamento.
 
-O projeto foi desenvolvido em **HTML, CSS e JavaScript puro**, sem frameworks ou banco de dados. Ele pode ser executado localmente diretamente no navegador.
+O projeto foi desenvolvido em **HTML, CSS e JavaScript puro**.
 
 ## Demonstração
 
@@ -114,28 +114,6 @@ cd agente-coletor-busca-grid
 
 Depois, abra `index.html` com o navegador.
 
-### Opção 2: servidor local recomendado
-
-A forma recomendada é usar um servidor HTTP local. Com Python instalado, execute:
-
-```bash
-python3 -m http.server 8000
-```
-
-No Windows, o comando também pode ser:
-
-```bash
-python -m http.server 8000
-```
-
-Acesse no navegador:
-
-```
-http://localhost:8000
-```
-
-Para encerrar o servidor, pressione `Ctrl + C` no terminal.
-
 ## Como usar
 
 1. Abra a aplicação.
@@ -201,36 +179,7 @@ agente-coletor-busca-grid/
 ├── styles.css
 ├── app.js
 ├── README.md
-└── COMO_EXECUTAR_NO_PC.txt
 ```
-
-### `index.html`
-
-Define a estrutura da interface, os controles, os cartões de métricas, a legenda e o elemento que recebe o grid.
-
-### `styles.css`
-
-Define o layout, as cores dos terrenos, a visualização da fronteira, os estados visitados, o caminho final, os marcadores e a responsividade.
-
-### `app.js`
-
-Implementa a geração do mapa, as cinco estratégias de busca, a reconstrução do caminho, a animação dos frames, o deslocamento do agente e a coleta da comida.
-
-### `COMO_EXECUTAR_NO_PC.txt`
-
-Traz instruções rápidas para executar o projeto no Windows, Linux e macOS.
-
-## Requisitos
-
-Para abrir diretamente no navegador:
-
-- Navegador moderno, como Chrome, Firefox, Edge ou Safari.
-
-Para executar com servidor local:
-
-- Python 3, ou outro servidor HTTP sim[http://localhost:8000](http://localhost:8000)ples.
-
-Não é necessário instalar Node.js, npm, banco de dados ou bibliotecas JavaScript.
 
 ## Tecnologias
 
@@ -245,12 +194,6 @@ Não é necessário instalar Node.js, npm, banco de dados ou bibliotecas JavaScr
 - `Set`, `Map` e fila de prioridade;
 
 - Heurística Manhattan;
-
-- Python HTTP Server opcional para execução local.
-
-## Licença
-
-Este projeto pode ser utilizado para fins acadêmicos e educacionais. Se desejar publicar o projeto com uma licença específica, adicione um arquivo `LICENSE` ao repositório, como MIT, Apache-2.0 ou GPL-3.0.
 
 ## Autoria
 
