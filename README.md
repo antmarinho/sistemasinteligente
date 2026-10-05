@@ -22,7 +22,7 @@ A aplicação permite selecionar uma estratégia, gerar mapas diferentes e acomp
 
 - Mapas gerados automaticamente e aleatoriamente;
 
-- Áreas de areia, atoleiro e água com formatos e tamanhos variados;
+- Distribuição dos terrenos por ruído de Perlin, formando regiões contínuas de areia, atoleiro e água;
 
 - Obstáculos em blocos com dimensões variadas;
 
@@ -44,7 +44,7 @@ A aplicação permite selecionar uma estratégia, gerar mapas diferentes e acomp
 
 - Controle de velocidade da simulação;
 
-- Layout responsivo para telas grandes, tablets e celulares;
+- Layout que se ajusta ao tamanho da janela do navegador, exibindo toda a aplicação sem barra de rolagem;
 
 - Execução sem instalação de bibliotecas ou dependências externas.
 
@@ -97,7 +97,11 @@ h(n) = |linha_atual - linha_objetivo|
 
 ## Geração do mapa
 
-O mapa possui inicialmente **18 linhas e 26 colunas**. Cada célula recebe um terreno aleatório. Em seguida, o programa sobrepõe manchas irregulares de areia, atoleiro e água, além de blocos de obstáculos com altura e largura aleatórias.
+O mapa possui inicialmente **18 linhas e 26 colunas**.
+
+Os terrenos são distribuídos com **ruído de Perlin**. O programa gera um campo de "umidade" contínuo, no qual células próximas têm valores parecidos, e divide as células em faixas, da mais seca para a mais úmida: areia, livre, atoleiro e água. Como as faixas são definidas por posição na ordenação, a proporção de cada terreno é sempre a de `MOISTURE_BANDS`, e terrenos vizinhos na lista tendem a ficar vizinhos no mapa (por exemplo, a água costuma ser cercada por atoleiro).
+
+Depois, o programa sobrepõe blocos de obstáculos com altura e largura aleatórias.
 
 Antes de aceitar um mapa, o programa verifica se existe um caminho entre o agente e a comida. Caso o mapa fique impossível, ele é descartado e outro mapa é gerado.
 
@@ -141,10 +145,11 @@ As configurações podem ser alteradas no início de `app.js`.
 | `ROWS` | Quantidade de linhas do grid. |
 | `COLS` | Quantidade de colunas do grid. |
 | `COSTS` | Custo de energia de cada terreno. |
-| `TERRAIN_POOL` | Distribuição inicial dos terrenos. |
+| `MOISTURE_BANDS` | Terrenos da faixa mais seca para a mais úmida, com a proporção de cada um. |
+| `NOISE_SCALE` | Escala do ruído de Perlin. Valores menores geram regiões maiores. |
+| `NOISE_OCTAVES` | Camadas de ruído somadas. Mais camadas geram bordas mais irregulares. |
 | `TERRAIN_SPEED` | Velocidade relativa do agente por terreno. |
 | `SPEEDS` | Velocidade dos frames da animação. |
-| `paintArea(..., 8, 34 )` | Tamanho mínimo e máximo das áreas de terreno. |
 | `for (let i=0; i<9; i++)` | Quantidade de agrupamentos de obstáculos. |
 | `rand(4)` | Limite usado para a altura dos obstáculos. |
 | `rand(5)` | Limite usado para a largura dos obstáculos. |
@@ -189,7 +194,9 @@ agente-coletor-busca-grid/
 
 - JavaScript moderno;
 
-- CSS Grid;
+- CSS Grid e container queries (`cqw`/`cqh`) para encaixar o mapa na janela;
+
+- Ruído de Perlin para a geração dos terrenos;
 
 - `Set`, `Map` e fila de prioridade;
 

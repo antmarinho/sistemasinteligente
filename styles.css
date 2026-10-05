@@ -3,33 +3,32 @@
   --ink: #17221f; --muted: #6b7b74; --line: #dce5df; --paper: #f5f7f3; --card: #ffffff;
   --accent: #e8753c; --accent-dark: #b95022; --teal: #3d8b80; --navy: #244c5b;
   --shadow: 0 18px 45px rgba(32, 61, 52, .08);
+  /* Dimensões do grid. Devem acompanhar ROWS e COLS de app.js. */
+  --cols: 26; --rows: 18;
 }
 /* Inclui bordas e padding no cálculo total das dimensões. */
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--ink); background: var(--paper); font-family: 'Space Grotesk', system-ui, sans-serif; }
-/* Estrutura geral e cabeçalho da página. */
-.app-shell { max-width: 1700px; margin: 0 auto; padding: 42px 48px 30px; }
-.hero { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:30px; }
-.eyebrow, .section-kicker, .stat-label { font: 500 10px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
-h1 { margin: 7px 0 10px; font-size: clamp(38px, 5vw, 64px); line-height: .98; letter-spacing: -.065em; font-weight: 700; }
+/* A página ocupa exatamente a altura da janela. Os blocos se ajustam ao espaço disponível, sem barra de rolagem. */
+.app-shell { max-width: 1700px; min-width: 1000px; height: 100dvh; min-height: 560px; margin: 0 auto; padding: 16px 28px 12px; display: flex; flex-direction: column; gap: 12px; }
+/* Cabeçalho compacto com título e descrição. */
+.hero { flex: none; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.eyebrow, .section-kicker, .metric span { font: 500 10px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
+.eyebrow { margin: 0; }
+h1 { margin: 4px 0 6px; font-size: clamp(26px, 4.6vh, 42px); line-height: 1; letter-spacing: -.05em; font-weight: 700; }
 h1 span { color: var(--accent); }
-.subtitle { max-width: 650px; margin:0; color:var(--muted); font-size:16px; line-height:1.55; }
-.hero-badge { display:flex; align-items:center; gap:9px; padding:10px 13px; border:1px solid var(--line); border-radius:99px; background:#fff; color:#4b665e; font:500 11px 'DM Mono'; white-space:nowrap; }
+.subtitle { max-width: 650px; margin:0; color:var(--muted); font-size:13px; line-height:1.4; }
+.hero-badge { display:flex; align-items:center; gap:9px; padding:8px 12px; border:1px solid var(--line); border-radius:99px; background:#fff; color:#4b665e; font:500 11px 'DM Mono'; white-space:nowrap; }
 .pulse { width:8px; height:8px; border-radius:50%; background:#64b994; box-shadow:0 0 0 5px #dff1e7; }
 /* Cartões brancos utilizados nos controles, métricas e tabuleiro. */
-.panel, .stat-card { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
-/* Barra de seleção do algoritmo, velocidade e botões. */
-.control-panel { display:flex; align-items:end; gap:26px; padding:18px 20px; margin-bottom:16px; }
-.control-group { flex:1; min-width:200px; } label { display:block; margin-bottom:8px; font:500 10px 'DM Mono'; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
-select, input[type=range] { width:100%; } select { border:1px solid var(--line); border-radius:9px; background:#fbfcfa; padding:11px 12px; color:var(--ink); font:500 13px 'Space Grotesk'; }
-.range-row { display:flex; align-items:center; gap:12px; } input[type=range] { accent-color:var(--accent); } #speedValue { min-width:54px; font:500 11px 'DM Mono'; color:var(--accent-dark); }
-.actions { display:flex; gap:9px; } .button { border:0; border-radius:9px; padding:12px 16px; cursor:pointer; font:600 12px 'Space Grotesk'; transition:transform .15s, box-shadow .15s, opacity .15s; white-space:nowrap; }
-.button:hover { transform:translateY(-1px); } .button:disabled { opacity:.5; cursor:not-allowed; transform:none; } .primary { background:var(--accent); color:white; box-shadow:0 5px 12px #e8753c33; } .secondary { background:#edf2ee; color:#35554c; }
-.stats-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:16px; } .stat-card { padding:14px 15px; } .stat-card strong { display:block; margin-top:7px; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } #status { color:var(--teal); }
-/* Distribuição do tabuleiro e da coluna lateral. */
-.workspace { display:grid; grid-template-columns:minmax(0, 1fr) 340px; gap:20px; } .board-panel { padding:24px; } .board-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:18px; } h2 { margin:5px 0 0; font-size:21px; letter-spacing:-.03em; } .coordinates { color:var(--muted); font:11px 'DM Mono'; }
-/* O grid tem 26 colunas e 18 linhas, como definido em app.js. */
-.grid { display:grid; grid-template-columns:repeat(26, 1fr); gap:4px; width:100%; aspect-ratio:26/18; min-height:540px; background:#e8eee9; padding:6px; border-radius:14px; overflow:hidden; }
+.panel { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
+/* Área principal: o tabuleiro ocupa a largura restante e a coluna lateral tem largura fixa. */
+.workspace { flex: 1; min-height: 0; display:grid; grid-template-columns:minmax(0, 1fr) 360px; grid-template-rows:minmax(0, 1fr); gap:16px; }
+.board-panel { min-height:0; padding:16px 20px; display:flex; flex-direction:column; }
+.board-header { flex:none; display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:10px; } h2 { margin:3px 0 0; font-size:19px; letter-spacing:-.03em; } .coordinates { color:var(--muted); font:11px 'DM Mono'; }
+/* O contêiner mede o espaço livre e o grid usa o maior tamanho que cabe nele, mantendo a proporção. */
+.grid-stage { flex:1; min-height:0; display:grid; place-items:center; container-type:size; }
+.grid { display:grid; grid-template-columns:repeat(var(--cols), 1fr); grid-template-rows:repeat(var(--rows), 1fr); gap:4px; width:min(100cqw, calc(100cqh * var(--cols) / var(--rows))); aspect-ratio:var(--cols)/var(--rows); background:#e8eee9; padding:6px; border-radius:14px; overflow:hidden; }
 /* Cores originais dos terrenos. */
 .cell { position:relative; min-width:0; min-height:0; border-radius:3px; background:#e7eee6; transition:background .16s, box-shadow .16s, transform .16s; } .cell.grass { background:#e7eee6; } .cell.sand { background:#eadca8; } .cell.mud { background:#a88670; } .cell.water { background:#7fb8c5; } .cell.obstacle { background:#33494b; }
 /* Estados intermediários: fronteira laranja forte e azul translúcido. */
@@ -45,17 +44,24 @@ select, input[type=range] { width:100%; } select { border:1px solid var(--line);
 .cell.path.water { background:#7fb8c5 !important; }
 .cell.agent::after, .cell.goal::after { content:''; position:absolute; inset:18%; border-radius:50%; } .cell.agent::after { background:#244c5b; box-shadow:0 0 0 2px #fff; } .cell.goal::after { background:#ef6d43; box-shadow:0 0 0 2px #fff; }
 /* Legenda, marcadores do agente e da comida. */
-.legend { display:flex; align-items:center; flex-wrap:wrap; gap:11px 15px; margin-top:15px; color:#5d7168; font-size:11px; } .legend-swatch { display:inline-block; width:11px; height:11px; vertical-align:-2px; margin-right:5px; border-radius:3px; } .terrain.grass{background:#e7eee6}.terrain.sand{background:#eadca8}.terrain.mud{background:#a88670}.terrain.water{background:#7fb8c5}.terrain.obstacle{background:#33494b}.marker.start{background:#244c5b;border-radius:50%}.marker.goal{background:#ef6d43;border-radius:50%}.legend-divider{height:16px;width:1px;background:var(--line)}
-/* Painéis laterais de leitura do frame e métricas. */
-.side-column { display:flex; flex-direction:column; gap:16px; } .explanation, .metrics { padding:20px; } .explanation p { color:var(--muted); font-size:13px; line-height:1.55; margin:12px 0 20px; } .phase-key { border-top:1px solid var(--line); padding-top:14px; display:flex; flex-direction:column; gap:10px; color:#536961; font:11px 'DM Mono'; } .key-dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:7px; } .frontier-dot{background:#fff;box-shadow:inset 0 0 0 2px #a83b00}.visited-dot{background:#31a9e0}.path-dot{background:#fff;box-shadow:inset 0 0 0 2px #f08445,0 0 0 1px #d96026}
-/* Menus compactos na lateral do mapa. */
-.side-column .control-panel { display:block; padding:16px; }
-.side-column .control-group { min-width:0; margin-bottom:14px; }
-.side-column .actions { display:grid; grid-template-columns:1fr; gap:8px; }
-.side-column .button { width:100%; }
-/* Ajustes para tablets e celulares. */
-.metrics { flex:1; } .metric-row { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #edf1ee; padding:14px 0; color:var(--muted); font-size:12px; } .metric-row:last-child{border-bottom:0}.metric-row strong{color:var(--ink);font:500 12px 'DM Mono';}
-footer { display:flex; justify-content:space-between; gap:18px; margin-top:17px; color:#82928a; font:10px 'DM Mono'; } .mono{white-space:nowrap}
-@media(max-width:1250px){.workspace{grid-template-columns:minmax(0, 1fr) 300px}.grid{min-height:480px}.side-column{display:flex}.control-panel{flex-wrap:wrap}.algorithm-group{min-width:280px}.stats-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:1050px){.workspace{grid-template-columns:1fr}.side-column{display:grid;grid-template-columns:1fr 1fr}.grid{min-height:0}.control-panel{flex-wrap:wrap}.algorithm-group{min-width:280px}.stats-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:650px){.app-shell{padding:24px 14px}.hero{display:block}.hero-badge{display:inline-flex;margin-top:18px}.control-panel{display:block}.control-group{margin-bottom:17px}.actions{width:100%}.button{flex:1}.stats-grid{grid-template-columns:repeat(2,1fr)}.side-column{display:flex}.board-panel{padding:11px}.grid{gap:2px;padding:3px}.legend{gap:8px 10px}footer{display:block}.mono{display:block;margin-top:8px}}
+.legend { flex:none; display:flex; align-items:center; flex-wrap:wrap; gap:6px 15px; margin-top:10px; color:#5d7168; font-size:11px; } .legend-swatch { display:inline-block; width:11px; height:11px; vertical-align:-2px; margin-right:5px; border-radius:3px; } .terrain.grass{background:#e7eee6}.terrain.sand{background:#eadca8}.terrain.mud{background:#a88670}.terrain.water{background:#7fb8c5}.terrain.obstacle{background:#33494b}.marker.start{background:#244c5b;border-radius:50%}.marker.goal{background:#ef6d43;border-radius:50%}.legend-divider{height:16px;width:1px;background:var(--line)}
+/* Coluna lateral: controles e métricas têm altura própria; a leitura do frame ocupa o que sobrar. */
+.side-column { min-height:0; display:flex; flex-direction:column; gap:12px; }
+/* Controles. */
+.control-panel { flex:none; padding:12px 16px; }
+.control-group { margin-bottom:8px; } label { display:block; margin-bottom:5px; font:500 10px 'DM Mono'; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+select, input[type=range] { width:100%; } select { border:1px solid var(--line); border-radius:9px; background:#fbfcfa; padding:8px 10px; color:var(--ink); font:500 13px 'Space Grotesk'; }
+.range-row { display:flex; align-items:center; gap:12px; } input[type=range] { accent-color:var(--accent); margin:0; } #speedValue { min-width:54px; font:500 11px 'DM Mono'; color:var(--accent-dark); }
+.actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; } .button { border:0; border-radius:9px; padding:10px 12px; cursor:pointer; font:600 12px 'Space Grotesk'; transition:transform .15s, box-shadow .15s, opacity .15s; white-space:nowrap; }
+.button:hover { transform:translateY(-1px); } .button:disabled { opacity:.5; cursor:not-allowed; transform:none; } .primary { background:var(--accent); color:white; box-shadow:0 5px 12px #e8753c33; } .secondary { background:#edf2ee; color:#35554c; }
+/* Leitura do frame: o texto muda a cada fase, por isso o painel absorve a variação de altura. */
+.explanation { flex:1 1 0; min-height:0; padding:12px 16px; display:flex; flex-direction:column; overflow:hidden; } .explanation h2 { font-size:17px; } .explanation p { flex:1; min-height:0; overflow:hidden; color:var(--muted); font-size:12.5px; line-height:1.45; margin:6px 0 8px; }
+.phase-key { flex:none; border-top:1px solid var(--line); padding-top:10px; display:flex; gap:14px; white-space:nowrap; color:#536961; font:10.5px 'DM Mono'; } .key-dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; } .frontier-dot{background:#fff;box-shadow:inset 0 0 0 2px #a83b00}.visited-dot{background:#31a9e0}.path-dot{background:#fff;box-shadow:inset 0 0 0 2px #f08445,0 0 0 1px #d96026}
+/* Métricas da busca e do agente em duas colunas: rótulo em cima e valor embaixo. */
+.metrics { flex:none; padding:12px 16px; } .metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; }
+.metric { min-width:0; } .metric span { display:block; font-size:9px; line-height:1.2; letter-spacing:.08em; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .metric strong { display:block; margin-top:2px; color:var(--ink); font:500 12px/1.2 'DM Mono'; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } #status { color:var(--teal); }
+footer { flex:none; display:flex; justify-content:space-between; gap:18px; color:#82928a; font:10px 'DM Mono'; } .mono{white-space:nowrap}
+/* Em janelas baixas, o subtítulo sai do cabeçalho para dar espaço ao mapa. */
+@media(max-height:720px){ .subtitle{display:none} .app-shell{padding-top:10px; gap:10px} }
+/* Em janelas muito baixas, o rodapé e o rótulo da leitura do frame também saem. */
+@media(max-height:640px){ footer, .explanation .section-kicker{display:none} }
