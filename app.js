@@ -11,8 +11,12 @@ const COSTS = { grass: 1, sand: 10, mud: 50, water: 100 };
 // Nomes que aparecem na interface.
 const TERRAIN_NAMES = { grass: 'livre', sand: 'areia', mud: 'atoleiro', water: 'água' };
 
-// Distribuição inicial dos terrenos. Repetir um item aumenta sua chance de aparecer.
-const TERRAIN_POOL = ['grass', 'grass', 'grass', 'grass', 'sand', 'sand', 'sand', 'mud', 'mud', 'water', 'water', 'obstacle', 'obstacle', 'obstacle'];
+// Faixas de umidade, da mais seca para a mais úmida, com a proporção de cada terreno no mapa.
+// A ordem importa: terrenos vizinhos na lista tendem a ficar vizinhos no mapa.
+const MOISTURE_BANDS = [['sand', 3], ['grass', 4], ['mud', 2], ['water', 2]];
+
+// Parâmetros do ruído de Perlin. Escala menor gera regiões maiores; mais oitavas geram bordas mais irregulares.
+const NOISE_SCALE = 0.11, NOISE_OCTAVES = 2;
 
 // Velocidade relativa do agente em cada terreno.
 const TERRAIN_SPEED = { grass: 100, sand: 75, mud: 45, water: 25 };
@@ -84,11 +88,86 @@ function terrainAt(pos) { return map[pos[0]][pos[1]]; }
 function isSame(a,b) { return a && b && a[0] === b[0] && a[1] === b[1]; }
 
 // ============================================================
-// GERAÇÃO DE ÁREAS E OBSTÁCULOS
+// RUÍDO DE PERLIN E DISTRIBUIÇÃO DOS TERRENOS
+// ============================================================
+
+// Cria um gerador de ruído de Perlin 2D com uma tabela de permutação nova a cada chamada.
+function createPerlin() {
+  const perm = Array.from({length: 256}, (_, i) => i);
+  for (let i=255; i>0; i--) {
+    const j = rand(i + 1);
+    [perm[i], perm[j]] = [perm[j], perm[i]];
+  }
+  const p = [...perm, ...perm];
+
+  const fade = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a,b,t) => a + t * (b - a);
+
+  // Produto escalar entre uma direção pseudoaleatória e o vetor até o ponto.
+  const grad = (hash,x,y) => {
+    switch (hash & 3) {
+      case 0: return  x + y;
+      case 1: return -x + y;
+      case 2: return  x - y;
+      default: return -x - y;
+    }
+  };
+
+  return (x,y) => {
+    const xi = Math.floor(x) & 255, yi = Math.floor(y) & 255;
+    const xf = x - Math.floor(x), yf = y - Math.floor(y);
+    const u = fade(xf), v = fade(yf);
+    const aa = p[p[xi] + yi], ab = p[p[xi] + yi + 1];
+    const ba = p[p[xi + 1] + yi], bb = p[p[xi + 1] + yi + 1];
+    return lerp(
+      lerp(grad(aa, xf, yf),     grad(ba, xf - 1, yf),     u),
+      lerp(grad(ab, xf, yf - 1), grad(bb, xf - 1, yf - 1), u),
+      v
+    );
+  };
+}
+
+// Soma várias oitavas de ruído, cada uma com o dobro da frequência e metade da amplitude.
+function fractalNoise(noise, x, y) {
+  let total = 0, amplitude = 1, frequency = 1, norm = 0;
+  for (let i=0; i<NOISE_OCTAVES; i++) {
+    total += noise(x * frequency, y * frequency) * amplitude;
+    norm += amplitude;
+    amplitude /= 2;
+    frequency *= 2;
+  }
+  return total / norm;
+}
+
+// Cria uma matriz de terrenos a partir de um campo de umidade gerado com Perlin.
+// As células são ordenadas pela umidade e divididas em faixas, de modo que a proporção
+// de cada terreno segue MOISTURE_BANDS em qualquer mapa.
+function makeTerrain() {
+  const noise = createPerlin();
+  const cells = [];
+  for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++) {
+    cells.push({r, c, moisture: fractalNoise(noise, c * NOISE_SCALE, r * NOISE_SCALE)});
+  }
+  cells.sort((a,b) => a.moisture - b.moisture);
+
+  const terrain = Array.from({length: ROWS}, () => Array(COLS).fill('grass'));
+  const totalWeight = MOISTURE_BANDS.reduce((sum, [, weight]) => sum + weight, 0);
+  let accumulated = 0, index = 0;
+  for (const [type, weight] of MOISTURE_BANDS) {
+    accumulated += weight;
+    const end = Math.round(accumulated / totalWeight * cells.length);
+    for (; index < end; index++) terrain[cells[index].r][cells[index].c] = type;
+  }
+  return terrain;
+}
+
+// ============================================================
+// GERAÇÃO DE OBSTÁCULOS
 // ============================================================
 
 // Cria uma mancha irregular de um terreno.
 // minSize e maxSize controlam o tamanho mínimo e máximo da área.
+// Hoje é usada apenas para estender os blocos de obstáculos.
 function paintArea(targetMap, terrain, minSize, maxSize) {
   let row = rand(ROWS), col = rand(COLS);
   const size = minSize + rand(maxSize - minSize + 1);
@@ -126,13 +205,10 @@ function paintObstacleCluster(targetMap) {
 function makeMap() {
   // Tenta até 100 vezes para gerar um mapa com caminho possível.
   for (let attempt = 0; attempt < 100; attempt++) {
-    // Primeiro cria uma distribuição aleatória célula a célula.
-    const newMap = Array.from({length: ROWS}, () => Array.from({length: COLS}, () => TERRAIN_POOL[rand(TERRAIN_POOL.length)]));
+    // Distribui areia, grama, atoleiro e água em regiões contínuas com ruído de Perlin.
+    const newMap = makeTerrain();
 
-    // Depois sobrepõe manchas de areia, atoleiro e água.
-    for (let i=0; i<7; i++) paintArea(newMap, ['sand','mud','water'][rand(3)], 8, 34);
-
-    // Cria nove agrupamentos de obstáculos com tamanhos variados.
+    // Sobrepõe nove agrupamentos de obstáculos com tamanhos variados.
     for (let i=0; i<9; i++) paintObstacleCluster(newMap);
 
     // Guarda somente posições onde agente e comida podem aparecer.
