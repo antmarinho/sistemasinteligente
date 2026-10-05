@@ -44,7 +44,7 @@ A aplicação permite selecionar uma estratégia, gerar mapas diferentes e acomp
 
 - Controle de velocidade da simulação;
 
-- Layout responsivo para telas grandes, tablets e celulares;
+- Layout que se ajusta ao tamanho da janela do navegador, exibindo toda a aplicação sem barra de rolagem;
 
 - Execução sem instalação de bibliotecas ou dependências externas.
 
@@ -194,7 +194,7 @@ agente-coletor-busca-grid/
 
 - JavaScript moderno;
 
-- CSS Grid;
+- CSS Grid e container queries (`cqw`/`cqh`) para encaixar o mapa na janela;
 
 - Ruído de Perlin para a geração dos terrenos;
 

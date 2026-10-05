@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261002" />
+  <link rel="stylesheet" href="styles.css?v=20261003" />
 </head>
 <body>
   <!-- Todo o conteúdo visível fica dentro deste contêiner principal. -->
@@ -23,21 +23,15 @@
       <div class="hero-badge"><span class="pulse"></span> ambiente observável</div>
     </header>
 
-    <!-- Cartões com as métricas resumidas da busca. -->
-    <section class="stats-grid">
-      <div class="stat-card"><span class="stat-label">Algoritmo</span><strong id="statAlgorithm">A* (Manhattan)</strong></div>
-      <div class="stat-card"><span class="stat-label">Estado da busca</span><strong id="status">pronto para iniciar</strong></div>
-      <div class="stat-card"><span class="stat-label">Visitados</span><strong id="visitedCount">0</strong></div>
-      <div class="stat-card"><span class="stat-label">Custo do caminho</span><strong id="pathCost">—</strong></div>
-      <div class="stat-card"><span class="stat-label">Comidas coletadas</span><strong id="foodCount">0</strong></div>
-    </section>
-
     <!-- Área principal: tabuleiro à esquerda e leitura do frame à direita. -->
     <section class="workspace">
       <div class="board-panel panel">
         <div class="board-header"><div><span class="section-kicker">MAPA DINÂMICO</span><h2>Ambiente de coleta</h2></div><span class="coordinates" id="coordinates">gerando...</span></div>
-        <!-- app.js cria as células do mapa dinamicamente dentro deste elemento. -->
-        <div id="grid" class="grid" aria-label="Grid do ambiente"></div>
+        <!-- O contêiner mede o espaço livre; o grid ocupa o maior tamanho que cabe nele. -->
+        <div class="grid-stage">
+          <!-- app.js cria as células do mapa dinamicamente dentro deste elemento. -->
+          <div id="grid" class="grid" aria-label="Grid do ambiente"></div>
+        </div>
         <div class="legend">
           <span><i class="legend-swatch terrain grass"></i> livre</span><span><i class="legend-swatch terrain sand"></i> areia · 10</span><span><i class="legend-swatch terrain mud"></i> atoleiro · 50</span><span><i class="legend-swatch terrain water"></i> água · 100</span><span><i class="legend-swatch terrain obstacle"></i> obstáculo</span>
           <span class="legend-divider"></span><span><i class="legend-swatch marker start"></i> agente</span><span><i class="legend-swatch marker goal"></i> comida</span>
@@ -68,7 +62,19 @@
           </div>
         </section>
         <div class="panel explanation"><span class="section-kicker">LEITURA DO FRAME</span><h2 id="phaseTitle">Aguardando execução</h2><p id="phaseText">Escolha uma estratégia e execute a busca. A animação destaca a fronteira e os estados visitados a cada expansão.</p><div class="phase-key"><div><span class="key-dot frontier-dot"></span> fronteira</div><div><span class="key-dot visited-dot"></span> visitado</div><div><span class="key-dot path-dot"></span> caminho final</div></div></div>
-        <div class="panel metrics"><span class="section-kicker">MÉTRICAS</span><div class="metric-row"><span>Expansões</span><strong id="expansions">0</strong></div><div class="metric-row"><span>Passos do caminho</span><strong id="pathLength">—</strong></div><div class="metric-row"><span>Energia restante</span><strong id="energy">—</strong></div><div class="metric-row"><span>Terreno atual</span><strong id="currentTerrain">—</strong></div><div class="metric-row"><span>Velocidade</span><strong id="agentSpeed">—</strong></div></div>
+        <!-- Métricas da busca e do agente reunidas em um único painel. -->
+        <div class="panel metrics"><div class="metric-grid">
+          <div class="metric"><span>Algoritmo</span><strong id="statAlgorithm">A* (Manhattan)</strong></div>
+          <div class="metric"><span>Estado da busca</span><strong id="status">pronto para iniciar</strong></div>
+          <div class="metric"><span>Visitados</span><strong id="visitedCount">0</strong></div>
+          <div class="metric"><span>Expansões</span><strong id="expansions">0</strong></div>
+          <div class="metric"><span>Custo do caminho</span><strong id="pathCost">—</strong></div>
+          <div class="metric"><span>Passos do caminho</span><strong id="pathLength">—</strong></div>
+          <div class="metric"><span>Energia gasta</span><strong id="energy">—</strong></div>
+          <div class="metric"><span>Terreno atual</span><strong id="currentTerrain">—</strong></div>
+          <div class="metric"><span>Velocidade</span><strong id="agentSpeed">—</strong></div>
+          <div class="metric"><span>Comidas coletadas</span><strong id="foodCount">0</strong></div>
+        </div></div>
       </aside>
     </section>
 
@@ -76,6 +82,6 @@
   </main>
   <!-- O JavaScript controla a geração do mapa, as buscas e as animações. -->
   <!-- O parâmetro de versão evita que o navegador reutilize um app.js antigo em cache. -->
-  <script src="app.js?v=20261001"></script>
+  <script src="app.js?v=20261002"></script>
 </body>
 </html>
